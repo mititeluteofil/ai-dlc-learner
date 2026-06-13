@@ -33,9 +33,13 @@ spring-ai-commons = { module = "org.springframework.ai:spring-ai-commons" }
 spring-ai-autoconfigure-model-chat-client = { module = "org.springframework.ai:spring-ai-autoconfigure-model-chat-client" }
 spring-ai-autoconfigure-model-tool = { module = "org.springframework.ai:spring-ai-autoconfigure-model-tool" }
 
+# Spring AI Ollama starter (raw, used directly by demo-app in Phase 2; versions resolved via spring-ai-bom)
+spring-ai-starter-model-ollama = { module = "org.springframework.ai:spring-ai-starter-model-ollama" }
+
 # Spring Boot starters / autoconfigure (versions resolved via spring-boot-dependencies)
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }

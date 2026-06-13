@@ -1,0 +1,38 @@
+name: ai-dlc-learner
+
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ai-dlc-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  pgvector:
+    image: pgvector/pgvector:pg17
+    container_name: ai-dlc-pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: aidlc
+      POSTGRES_USER: aidlc
+      POSTGRES_PASSWORD: aidlc
+    volumes:
+      - pgvector-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aidlc -d aidlc"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  ollama-data:
+  pgvector-data:
