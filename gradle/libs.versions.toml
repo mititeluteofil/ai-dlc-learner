@@ -1,0 +1,48 @@
+[versions]
+# Java toolchain
+java = "21"
+
+# Spring Boot 4.0.x latest GA (verified on Maven Central, repo1.maven.org/maven2/org/springframework/boot/spring-boot-dependencies)
+springBoot = "4.0.7"
+
+# Spring AI BOM 2.0.0 GA, released ~May 2026 (verified on Maven Central,
+# repo1.maven.org/maven2/org/springframework/ai/spring-ai-bom)
+springAi = "2.0.0"
+
+# io.spring.dependency-management Gradle plugin, used by the Boot plugin for BOM import
+springDependencyManagement = "1.1.7"
+
+# JUnit 5 BOM
+junit = "5.14.4"
+
+[libraries]
+# BOMs - imported via platform()
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot" }
+spring-ai-bom = { module = "org.springframework.ai:spring-ai-bom", version.ref = "springAi" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+
+# Spring AI core/provider-neutral artifacts (versions resolved via spring-ai-bom)
+spring-ai-client-chat = { module = "org.springframework.ai:spring-ai-client-chat" }
+spring-ai-rag = { module = "org.springframework.ai:spring-ai-rag" }
+spring-ai-vector-store = { module = "org.springframework.ai:spring-ai-vector-store" }
+spring-ai-vector-store-advisor = { module = "org.springframework.ai:spring-ai-vector-store-advisor" }
+spring-ai-model = { module = "org.springframework.ai:spring-ai-model" }
+spring-ai-commons = { module = "org.springframework.ai:spring-ai-commons" }
+
+# Spring AI autoconfigure artifacts (versions resolved via spring-ai-bom)
+spring-ai-autoconfigure-model-chat-client = { module = "org.springframework.ai:spring-ai-autoconfigure-model-chat-client" }
+spring-ai-autoconfigure-model-tool = { module = "org.springframework.ai:spring-ai-autoconfigure-model-tool" }
+
+# Spring Boot starters / autoconfigure (versions resolved via spring-boot-dependencies)
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+
+# JUnit 5
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
