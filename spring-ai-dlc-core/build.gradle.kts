@@ -10,4 +10,7 @@ dependencies {
     api(libs.spring.ai.vector.store)
     api(libs.spring.ai.vector.store.advisor)
     api(libs.spring.ai.model)
+
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
 }

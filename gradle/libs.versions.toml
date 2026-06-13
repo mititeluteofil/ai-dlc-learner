@@ -47,6 +47,10 @@ spring-boot-configuration-processor = { module = "org.springframework.boot:sprin
 # JUnit 5
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 
+# Mockito (version managed via spring-boot-dependencies BOM)
+mockito-core = { module = "org.mockito:mockito-core" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter" }
+
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
