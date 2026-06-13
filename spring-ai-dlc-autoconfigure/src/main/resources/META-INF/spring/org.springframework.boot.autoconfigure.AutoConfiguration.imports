@@ -1,0 +1,4 @@
+com.aidlc.spring.autoconfigure.AiDlcChatAutoConfiguration
+com.aidlc.spring.autoconfigure.AiDlcRagAutoConfiguration
+com.aidlc.spring.autoconfigure.AiDlcAgentAutoConfiguration
+com.aidlc.spring.autoconfigure.StartupIngestionRunner
