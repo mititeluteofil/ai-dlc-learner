@@ -1,6 +1,10 @@
 spring:
   application:
     name: demo-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aidlc
+    username: aidlc
+    password: aidlc
   ai:
     ollama:
       base-url: http://localhost:11434
@@ -10,6 +14,17 @@ spring:
         model: qwen3:4b
       embedding:
         model: nomic-embed-text
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 768
+
+ai:
+  dlc:
+    rag:
+      ingest-on-startup:
+        enabled: true
+        location-pattern: "classpath:rag-corpus/**/*.md"
 
 management:
   endpoints:

@@ -10,9 +10,13 @@ dependencies {
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.actuator)
 
-    // Phase 2: raw Spring AI Ollama starter to de-risk the stack before
-    // building the custom core/autoconfigure modules (replaced in Phase 6).
+    // Provides the Ollama ChatModel/EmbeddingModel beans (chat client builder,
+    // embeddings for ingestion) consumed by the AI-DLC autoconfiguration.
     implementation(libs.spring.ai.starter.model.ollama)
 
+    // Provides the VectorStore bean required for AiDlcRagAutoConfiguration to activate.
+    implementation(libs.spring.ai.starter.vector.store.pgvector)
+
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.starter.webmvc.test)
 }
