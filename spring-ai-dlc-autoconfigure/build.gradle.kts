@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.spring.boot.autoconfigure)
     implementation(libs.spring.ai.autoconfigure.model.chat.client)
     implementation(libs.spring.ai.autoconfigure.model.tool)
+    implementation(libs.spring.ai.chat.memory.jdbc)
 
     annotationProcessor(libs.spring.boot.configuration.processor)
 

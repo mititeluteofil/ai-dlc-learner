@@ -7,7 +7,7 @@ Each task is <= 1 hour. Format:
 ## Build/dependencies
 
 - [x] T1: Add `spring-ai-chat-memory` and `spring-ai-starter-model-chat-memory-repository-jdbc` library aliases (confirm exact coordinates/class names against the resolved Spring AI 2.0.0 BOM) — files: `gradle/libs.versions.toml` — verify: `./gradlew :spring-ai-dlc-core:dependencies`
-- [ ] T2: Wire the new chat-memory dependencies into `spring-ai-dlc-core` (api dependency for `ChatMemory`/`MessageChatMemoryAdvisor` types) and `spring-ai-dlc-autoconfigure` (chat-memory + JDBC chat-memory-repository starter) — files: `spring-ai-dlc-core/build.gradle.kts`, `spring-ai-dlc-autoconfigure/build.gradle.kts` — verify: `./gradlew :spring-ai-dlc-autoconfigure:build`
+- [x] T2: Wire the new chat-memory dependencies into `spring-ai-dlc-core` (api dependency for `ChatMemory`/`MessageChatMemoryAdvisor` types) and `spring-ai-dlc-autoconfigure` (chat-memory + JDBC chat-memory-repository starter) — files: `spring-ai-dlc-core/build.gradle.kts`, `spring-ai-dlc-autoconfigure/build.gradle.kts` — verify: `./gradlew :spring-ai-dlc-autoconfigure:build`
 
 ## Core
 
