@@ -29,6 +29,13 @@ spring-ai-vector-store-advisor = { module = "org.springframework.ai:spring-ai-ve
 spring-ai-model = { module = "org.springframework.ai:spring-ai-model" }
 spring-ai-commons = { module = "org.springframework.ai:spring-ai-commons" }
 
+# NOTE: ChatMemory, MessageWindowChatMemory, ChatMemoryRepository, InMemoryChatMemoryRepository
+# (org.springframework.ai.chat.memory.*) ship inside spring-ai-model (already aliased above as
+# spring-ai-model), and MessageChatMemoryAdvisor ships inside spring-ai-client-chat (already
+# aliased as spring-ai-client-chat). There is no separate "spring-ai-model-chat-memory" artifact
+# in the spring-ai-bom 2.0.0 BOM, so no additional alias is needed for the chat-memory
+# abstractions themselves.
+
 # Spring AI autoconfigure artifacts (versions resolved via spring-ai-bom)
 spring-ai-autoconfigure-model-chat-client = { module = "org.springframework.ai:spring-ai-autoconfigure-model-chat-client" }
 spring-ai-autoconfigure-model-tool = { module = "org.springframework.ai:spring-ai-autoconfigure-model-tool" }
@@ -39,6 +46,11 @@ spring-ai-starter-model-ollama = { module = "org.springframework.ai:spring-ai-st
 # Spring AI pgvector vector store starter (Phase 6; provides the VectorStore bean
 # required for AiDlcRagAutoConfiguration to activate; versions resolved via spring-ai-bom)
 spring-ai-starter-vector-store-pgvector = { module = "org.springframework.ai:spring-ai-starter-vector-store-pgvector" }
+
+# Spring AI JDBC chat memory repository starter (Phase: conversation-memory; provides
+# JdbcChatMemoryRepository, PostgresChatMemoryRepositoryDialect, and the JDBC chat-memory
+# schema initializer; versions resolved via spring-ai-bom)
+spring-ai-chat-memory-jdbc = { module = "org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc" }
 
 # Spring Boot starters / autoconfigure (versions resolved via spring-boot-dependencies)
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
