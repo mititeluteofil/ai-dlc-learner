@@ -12,7 +12,13 @@ public record AiDlcProperties(
         @NestedConfigurationProperty @DefaultValue Rag rag,
         @NestedConfigurationProperty @DefaultValue Agent agent) {
 
-    /** RAG ingestion and query tuning. */
+    /**
+     * RAG ingestion and query tuning.
+     *
+     * <p>Note: {@code chunkOverlap} is currently a no-op. Spring AI 2.0's
+     * {@code TokenTextSplitter} does not expose an overlap knob, so the value is accepted
+     * for forward compatibility but not applied during chunking (see {@code ChunkingSpec}).
+     */
     public record Rag(
             @DefaultValue("800") int chunkSize,
             @DefaultValue("100") int chunkOverlap,

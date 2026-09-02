@@ -27,6 +27,7 @@ import org.springframework.ai.vectorstore.filter.Filter;
 public final class RagPipeline {
 
     private final ChatClient.Builder chatClientBuilder;
+    private final ChatClient chatClient;
     private final VectorStore vectorStore;
     private final int topK;
     private final double similarityThreshold;
@@ -36,6 +37,7 @@ public final class RagPipeline {
 
     private RagPipeline(Builder builder) {
         this.chatClientBuilder = builder.chatClientBuilder;
+        this.chatClient = builder.chatClientBuilder.build();
         this.vectorStore = builder.vectorStore;
         this.topK = builder.topK;
         this.similarityThreshold = builder.similarityThreshold;
@@ -51,15 +53,14 @@ public final class RagPipeline {
     public RagAnswer ask(String question) {
         Objects.requireNonNull(question, "question must not be null");
 
-        ChatClient.ChatClientRequestSpec request = chatClientBuilder.build()
+        ChatClient.ChatClientRequestSpec request = chatClient
             .prompt()
             .user(question)
             .advisors(queryRewriteEnabled ? retrievalAugmentationAdvisor() : questionAnswerAdvisor());
 
         ChatClientResponse response = request.call().chatClientResponse();
-        String answer = response.chatResponse().getResult().getOutput().getText();
         List<Citation> citations = extractCitations(response);
-        return new RagAnswer(answer, citations);
+        return new RagAnswer(extractAnswer(response), citations);
     }
 
     private QuestionAnswerAdvisor questionAnswerAdvisor() {
@@ -96,6 +97,16 @@ public final class RagPipeline {
             builder.filterExpression(filterExpression);
         }
         return builder.build();
+    }
+
+    private String extractAnswer(ChatClientResponse response) {
+        var chatResponse = response.chatResponse();
+        if (chatResponse == null || chatResponse.getResult() == null
+                || chatResponse.getResult().getOutput() == null) {
+            return "";
+        }
+        String text = chatResponse.getResult().getOutput().getText();
+        return text != null ? text : "";
     }
 
     @SuppressWarnings("unchecked")

@@ -62,9 +62,10 @@ public class IngestionPipeline {
                 TokenTextSplitter splitter = chunkingSpec.toSplitter();
                 List<Document> chunks = splitter.apply(documents);
 
+                MessageDigest digest = sha256();
                 List<Document> identified = new ArrayList<>(chunks.size());
                 for (int i = 0; i < chunks.size(); i++) {
-                    identified.add(withDeterministicId(chunks.get(i), source.identifier(), i));
+                    identified.add(withDeterministicId(chunks.get(i), digest, source.identifier(), i));
                 }
 
                 if (!identified.isEmpty()) {
@@ -81,16 +82,24 @@ public class IngestionPipeline {
         }
     }
 
-    static Document withDeterministicId(Document document, String sourceIdentifier, int chunkIndex) {
-        String id = deterministicId(sourceIdentifier, chunkIndex);
+    static Document withDeterministicId(Document document, MessageDigest digest, String sourceIdentifier, int chunkIndex) {
+        String id = deterministicId(digest, sourceIdentifier, chunkIndex);
         return document.mutate().id(id).build();
     }
 
     static String deterministicId(String sourceIdentifier, int chunkIndex) {
+        return deterministicId(sha256(), sourceIdentifier, chunkIndex);
+    }
+
+    private static String deterministicId(MessageDigest digest, String sourceIdentifier, int chunkIndex) {
+        // MessageDigest.digest() resets the instance, so a single digest can be reused across chunks.
+        byte[] hash = digest.digest((sourceIdentifier + "#" + chunkIndex).getBytes(StandardCharsets.UTF_8));
+        return HexFormat.of().formatHex(hash);
+    }
+
+    private static MessageDigest sha256() {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest((sourceIdentifier + "#" + chunkIndex).getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(hash);
+            return MessageDigest.getInstance("SHA-256");
         }
         catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("SHA-256 not available", e);
