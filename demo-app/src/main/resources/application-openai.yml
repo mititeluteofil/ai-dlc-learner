@@ -1,0 +1,28 @@
+# Optional `openai` profile: run the demo app against the OpenAI API instead of local Ollama.
+#
+# This profile alone does NOT add the OpenAI starter dependency - `demo-app/build.gradle.kts`
+# currently depends only on `spring-ai-starter-model-ollama`. To use this profile you must
+# additionally add `org.springframework.ai:spring-ai-starter-model-openai` (resolved via the
+# `spring-ai-bom`) to `demo-app/build.gradle.kts`, then run with:
+#
+#   OPENAI_API_KEY=sk-... ./gradlew :demo-app:bootRun --args='--spring.profiles.active=openai'
+#
+# Uses a distinct pgvector table (`vector_store_openai`) and `dimensions=1536` to match
+# OpenAI's `text-embedding-3-small`, so the same Postgres instance can hold both the
+# Ollama (768-dim, default table) and OpenAI (1536-dim) embeddings without collisions.
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 1536
+        table-name: vector_store_openai
