@@ -12,8 +12,8 @@ Each task is <= 1 hour. Format:
 ## Core
 
 - [x] T3: Add `MemoryBackend` enum (`IN_MEMORY`, `JDBC`, `PGVECTOR`) and package-info for the new memory package — files: `spring-ai-dlc-core/src/main/java/com/aidlc/spring/core/agent/memory/MemoryBackend.java`, `spring-ai-dlc-core/src/main/java/com/aidlc/spring/core/agent/memory/package-info.java` — verify: `./gradlew :spring-ai-dlc-core:test`
-- [ ] T4: Add `ConversationMemory` facade wrapping `ChatMemory`: `isEnabled()`, `advise(ChatClient.ChatClientRequestSpec, conversationId)` that attaches `MessageChatMemoryAdvisor` for non-blank ids, no-ops for blank ids, and degrades gracefully (log + unadvised request) on store errors — files: `spring-ai-dlc-core/src/main/java/com/aidlc/spring/core/agent/memory/ConversationMemory.java` — verify: `./gradlew :spring-ai-dlc-core:test`
-- [ ] T5: Unit tests for `ConversationMemory`: advisor attached for non-blank conversation id, request unchanged for blank id, graceful degradation when the underlying store throws — files: `spring-ai-dlc-core/src/test/java/com/aidlc/spring/core/agent/memory/ConversationMemoryTest.java` — verify: `./gradlew :spring-ai-dlc-core:test`
+- [x] T4: Add `ConversationMemory` facade wrapping `ChatMemory`: `isEnabled()`, `advise(ChatClient.ChatClientRequestSpec, conversationId)` that attaches `MessageChatMemoryAdvisor` for non-blank ids, no-ops for blank ids, and degrades gracefully (log + unadvised request) on store errors — files: `spring-ai-dlc-core/src/main/java/com/aidlc/spring/core/agent/memory/ConversationMemory.java` — verify: `./gradlew :spring-ai-dlc-core:test`
+- [x] T5: Unit tests for `ConversationMemory`: advisor attached for non-blank conversation id, request unchanged for blank id, graceful degradation when the underlying store throws — files: `spring-ai-dlc-core/src/test/java/com/aidlc/spring/core/agent/memory/ConversationMemoryTest.java` — verify: `./gradlew :spring-ai-dlc-core:test`
 
 ## Autoconfigure
 
