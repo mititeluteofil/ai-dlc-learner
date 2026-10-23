@@ -4,6 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
+import com.aidlc.spring.core.agent.memory.MemoryBackend;
+
 /**
  * Top-level {@code ai.dlc.*} configuration properties for the AI-DLC starter.
  */
@@ -35,6 +37,16 @@ public record AiDlcProperties(
     }
 
     /** Agent execution defaults. */
-    public record Agent(@DefaultValue("5") int maxToolIterations) {
+    public record Agent(
+            @DefaultValue("5") int maxToolIterations,
+            @NestedConfigurationProperty @DefaultValue Memory memory) {
+
+        /** Conversation memory configuration. */
+        public record Memory(
+                @DefaultValue("false") boolean enabled,
+                @DefaultValue("20") int maxMessages,
+                @DefaultValue("in-memory") MemoryBackend backend,
+                @DefaultValue("true") boolean initializeSchema) {
+        }
     }
 }
