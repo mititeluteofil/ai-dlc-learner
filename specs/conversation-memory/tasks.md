@@ -25,10 +25,10 @@ Each task is <= 1 hour. Format:
 
 ## Demo wiring
 
-- [ ] T11: Add optional `conversationId` to `AskRequest`; in the `project` route build the request via `ConversationMemory.advise(...)` when the optional `ConversationMemory` bean is present and `conversationId` is non-blank; `docs` route and `/api/agent/summarize` remain unchanged/stateless — files: `demo-app/src/main/java/com/aidlc/spring/demo/agent/AgentController.java` — verify: `./gradlew :demo-app:build`
-- [ ] T12: Add `ai.dlc.agent.memory.*` example/defaults to demo `application.yml` (e.g. `enabled: true`, `max-messages: 20`, `backend: in-memory`, `initialize-schema: true`, with comments on `jdbc`/`pgvector` options) — files: `demo-app/src/main/resources/application.yml` — verify: `./gradlew :demo-app:build`
-- [ ] T13: Extend `AgentControllerTest` to cover: stateful `ask` with `conversationId` advises memory, stateless `ask` without `conversationId` unchanged, `summarize` unaffected by memory bean presence — files: `demo-app/src/test/java/com/aidlc/spring/demo/agent/AgentControllerTest.java` — verify: `./gradlew :demo-app:test`
+- [x] T11: Add optional `conversationId` to `AskRequest`; in the `project` route build the request via `ConversationMemory.advise(...)` when the optional `ConversationMemory` bean is present and `conversationId` is non-blank; `docs` route and `/api/agent/summarize` remain unchanged/stateless — files: `demo-app/src/main/java/com/aidlc/spring/demo/agent/AgentController.java` — verify: `./gradlew :demo-app:build`
+- [x] T12: Add `ai.dlc.agent.memory.*` example/defaults to demo `application.yml` (e.g. `enabled: true`, `max-messages: 20`, `backend: in-memory`, `initialize-schema: true`, with comments on `jdbc`/`pgvector` options) — files: `demo-app/src/main/resources/application.yml` — verify: `./gradlew :demo-app:build`
+- [x] T13: Extend `AgentControllerTest` to cover: stateful `ask` with `conversationId` advises memory, stateless `ask` without `conversationId` unchanged, `summarize` unaffected by memory bean presence — files: `demo-app/src/test/java/com/aidlc/spring/demo/agent/AgentControllerTest.java` — verify: `./gradlew :demo-app:test`
 
 ## Full verification
 
-- [ ] T14: Run the full build to confirm all modules compile and tests pass together — files: (none) — verify: `./gradlew build`
+- [x] T14: Run the full build to confirm all modules compile and tests pass together — files: (none) — verify: `./gradlew build`

@@ -24,7 +24,15 @@ ai:
     rag:
       ingest-on-startup:
         enabled: true
-        location-pattern: "classpath:rag-corpus/**/*.md"
+        location-pattern: "rag-corpus/**/*.md"
+    agent:
+      memory:
+        enabled: true
+        max-messages: 20
+        # Supported backends: in-memory (default, no DB required), jdbc (uses spring.datasource.*),
+        # or pgvector (persists history in the shared RAG PostgreSQL database).
+        backend: in-memory
+        initialize-schema: true
 
 management:
   endpoints:

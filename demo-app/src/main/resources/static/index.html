@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-DLC Learner — Zero-API-Key Spring AI Playground</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --green: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: #0b1120;
+    }
+    .title h1 { margin: 0; font-size: 1.35rem; }
+    .title p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.9rem; }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .badge {
+      font-size: 0.78rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+    .badge.ok { color: var(--green); border-color: #14532d; background: #052e16; }
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto;
+      padding: 0 1.25rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .card h2 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .card p.desc { margin: 0; color: var(--muted); font-size: 0.86rem; }
+    label { font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+    input, textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    textarea { min-height: 85px; resize: vertical; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.25rem 0.55rem;
+      border-radius: 0.4rem;
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+    .chip:hover { color: var(--text); border-color: var(--accent); }
+    button.primary {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button.primary:hover { background: var(--accent-hover); color: #fff; }
+    .output {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-size: 0.86rem;
+      white-space: pre-wrap;
+      min-height: 90px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>AI-DLC Learner — Spring Boot AI Playground</h1>
+      <p>Runs out-of-the-box with zero API_KEY (Local Ollama or Keyless LLM fallback)</p>
+    </div>
+    <div class="badges" id="status-badges">
+      <span class="badge ok">API_KEY: Not Required</span>
+      <span class="badge" id="llm-badge">Detecting LLM...</span>
+      <span class="badge" id="mem-badge">Memory: ...</span>
+      <span class="badge" id="vec-badge">VectorStore: ...</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Stateful Agent with Conversation Memory -->
+    <section class="card">
+      <h2>1. Routed Agent + Conversation Memory</h2>
+      <p class="desc"><code>POST /api/agent/ask</code> — Routes to <code>project</code> (stateful + tools) or <code>docs</code> (RAG). Supply a <code>conversationId</code> to retain multi-turn memory.</p>
+      <div>
+        <label for="conv-id">Conversation ID (leave blank for stateless)</label>
+        <input id="conv-id" type="text" value="demo-session-1" placeholder="e.g. demo-session-1" />
+      </div>
+      <div>
+        <label for="agent-q">Question</label>
+        <textarea id="agent-q">What Gradle modules exist in this repository and what is the build status?</textarea>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="setAgentPrompt('My name is Alex and I am evaluating the project modules. What Gradle modules exist?')">Turn 1: Introduce name + ask modules</button>
+        <button class="chip" onclick="setAgentPrompt('What is my name and what was the build status of those modules?')">Turn 2: Test memory recall</button>
+      </div>
+      <button class="primary" onclick="callAgentAsk()">Send to Agent (/api/agent/ask)</button>
+      <div class="output" id="agent-out">Response will appear here...</div>
+    </section>
+
+    <!-- 2. Docs RAG Pipeline -->
+    <section class="card">
+      <h2>2. Docs RAG Pipeline + Citations</h2>
+      <p class="desc"><code>POST /api/rag/ask</code> — Retrieves relevant chunks from <code>rag-corpus/*.md</code> and synthesizes a cited answer.</p>
+      <div>
+        <label for="rag-q">Docs Question</label>
+        <textarea id="rag-q">What are the two halves of ai-dlc-learner and what workflows are included?</textarea>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="document.getElementById('rag-q').value='What modules make up this project?'">Modules overview</button>
+        <button class="chip" onclick="document.getElementById('rag-q').value='How does the AI-DLC spec workflow work?'">AI-DLC spec workflow</button>
+      </div>
+      <button class="primary" onclick="callRagAsk()">Ask Docs RAG (/api/rag/ask)</button>
+      <div class="output" id="rag-out">Response + citations will appear here...</div>
+    </section>
+
+    <!-- 3. 2-Step Chain Workflow -->
+    <section class="card">
+      <h2>3. Two-Step Chain Workflow</h2>
+      <p class="desc"><code>POST /api/agent/summarize</code> — Executes <code>Workflows.chain(summarizeStep, bulletPointsStep)</code>.</p>
+      <div>
+        <label for="sum-q">Text to Summarize into Bullet Points</label>
+        <textarea id="sum-q">Spring AI-DLC Learner combines a provider-neutral Spring Boot starter for RAG, tool-calling agents, and multi-step workflows with an AI-DLC spec-driven development scaffold. It supports pluggable conversation memory backends (in-memory, JDBC, pgvector) and runs locally without requiring paid API keys.</textarea>
+      </div>
+      <button class="primary" onclick="callSummarize()">Run Chain (/api/agent/summarize)</button>
+      <div class="output" id="sum-out">Summarized bullet points will appear here...</div>
+    </section>
+  </main>
+
+  <script>
+    async function loadStatus() {
+      try {
+        const res = await fetch('/api/demo/status');
+        const data = await res.json();
+        document.getElementById('llm-badge').textContent = 'LLM: ' + data.llmProvider;
+        document.getElementById('mem-badge').textContent = 'Memory: ' + data.memoryBackend + ' (max ' + data.memoryMaxMessages + ')';
+        document.getElementById('vec-badge').textContent = 'Vectors: ' + data.vectorStore;
+      } catch (e) {
+        document.getElementById('llm-badge').textContent = 'Status unavailable';
+      }
+    }
+    function setAgentPrompt(text) {
+      document.getElementById('agent-q').value = text;
+    }
+    async function callAgentAsk() {
+      const out = document.getElementById('agent-out');
+      out.textContent = 'Calling LLM...';
+      try {
+        const res = await fetch('/api/agent/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question: document.getElementById('agent-q').value,
+            conversationId: document.getElementById('conv-id').value
+          })
+        });
+        const data = await res.json();
+        out.textContent = data.answer || JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+    async function callRagAsk() {
+      const out = document.getElementById('rag-out');
+      out.textContent = 'Retrieving chunks & calling LLM...';
+      try {
+        const res = await fetch('/api/rag/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: document.getElementById('rag-q').value })
+        });
+        const data = await res.json();
+        let text = data.answer + '\n\n--- Citations ---\n';
+        (data.citations || []).forEach((c, i) => {
+          text += `[${i + 1}] ${c.source} (score: ${Number(c.score).toFixed(2)})\n`;
+        });
+        out.textContent = text;
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+    async function callSummarize() {
+      const out = document.getElementById('sum-out');
+      out.textContent = 'Running 2-step chain workflow...';
+      try {
+        const res = await fetch('/api/agent/summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: document.getElementById('sum-q').value })
+        });
+        const data = await res.json();
+        out.textContent = data.answer || JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+    loadStatus();
+  </script>
+</body>
+</html>
